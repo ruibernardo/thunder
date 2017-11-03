@@ -19,9 +19,10 @@
 
         function view($action = "index") {
             $controller = $this->controller;
+            $domain = $this->domain;
             extract($this->heldData);
             ob_start();
-            include(__AP_DIR . "views/$controller/$action.php");
+            include(__AP_DIR . "views/$domain/$controller/$action.php");
             $content=ob_get_contents(); 
             ob_end_clean();
             return $content;
