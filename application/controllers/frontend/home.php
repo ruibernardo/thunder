@@ -23,7 +23,7 @@
 
             $c->data("testicles","name:" . $binder->name . " age:" . $binder->age);
 
-            return $c->view();
+            return $c->view("frontend/home/index");
         }
         
     }

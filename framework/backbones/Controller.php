@@ -17,12 +17,17 @@
             $this->heldData[$key] = $value;
         }
 
-        function view($action = "index") {
+        function view($path = "index") {
             $controller = $this->controller;
             $domain = $this->domain;
             extract($this->heldData);
             ob_start();
-            include(__AP_DIR . "views/$domain/$controller/$action.php");
+
+            if(stripos($path,"/") !== FALSE)
+                include(__AP_DIR . "views/$path.php");
+            else
+                include(__AP_DIR . "views/$domain/$controller/$path.php");
+
             $content=ob_get_contents(); 
             ob_end_clean();
             return $content;
