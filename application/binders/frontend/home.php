@@ -10,6 +10,9 @@
 
     class HomeOther extends Binder {
         
+        public $gender;
+        public $caralhada;
+
         function __construct($parameters) {
             parent::__construct($parameters,array("name","age"));
         }

@@ -18,8 +18,11 @@
     register_shutdown_function("shutdown");
 
     $backbones = array("Controller","Binder");
+    $helpers = array("Security","FileSystem","Url");
     foreach($backbones as $backbone)
         require_once(__FW_DIR . "backbones/$backbone.php");
+    foreach($helpers as $helper)
+        require_once(__FW_DIR . "helpers/$helper.php");
 
     require_once(__FW_DIR . "router.php");
     

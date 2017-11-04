@@ -2,8 +2,8 @@
 <?php
     class Home extends Controller {
 
-        function __construct($scope,$domain,$controller) {
-            parent::__construct($scope,$domain,$controller);
+        function __construct($scope,$domain,$controller,$action,$parameters) {
+            parent::__construct($scope,$domain,$controller,$action,$parameters);
         }
         
         public function index($parameters,$binder)
@@ -22,8 +22,10 @@
             $c = $this;
 
             $c->data("testicles","name:" . $binder->name . " age:" . $binder->age);
+            $c->data("gender",$binder->gender);
+            $c->data("title","Johnny Tobias");
 
-            return $c->view("frontend/home/index");
+            return $c->view("frontend/home/index","base");
         }
         
     }

@@ -9,8 +9,6 @@
     $action = "";
     $parameters = array();
     $domainindex = 0;
-    
-//THESE ARE INPUTS FROM THE URL. THEY SHOULD BE SANITIZED!
 
     foreach($domains as $d){
         $d = strtolower(substr($d,strripos($d,"/") + 1));
@@ -28,6 +26,9 @@
     if($domain == "")
         throw new Exception("LOAD 404 TEMPLATE HERE");
 
+    $scope = Security::cleanRoute($scope); 
+    $domain = Security::cleanRoute($domain); 
+
     $controllers = array_filter(glob(__AP_DIR . "controllers/$domain/*"), "is_file");
         
     foreach($controllers as $c){
@@ -41,14 +42,19 @@
     $action = $routedata[$domainindex + 2];
     $parameters = array_slice($routedata,$domainindex + 3);
    
-// CHECK IF FILES EXISTS. IGNORE BINDER, BUT STOP AT CONTROLLER
+    $controller = Security::cleanRoute($controller); 
+    $action = Security::cleanRoute($action); 
 
-    require(__AP_DIR . "controllers/$domain/$controller.php");
-    require(__AP_DIR . "binders/$domain/$controller.php");
+    if(!FileSystem::include(__AP_DIR . "controllers/$domain/$controller.php"))
+        throw new Exception("LOAD 404 TEMPLATE HERE");
+
+    $hasbinder = FileSystem::include(__AP_DIR . "binders/$domain/$controller.php");
     $controllerClass = ucfirst($controller);
-    $binderClass = ucfirst($controller).ucfirst($action);
-    $cc = new $controllerClass($scope,$domain,$controller);
-    if(class_exists($binderClass))
+    
+    $cc = new $controllerClass($scope,$domain,$controller,$action,$parameters);
+    $binderClass = ($hasbinder) ? ucfirst($controller).ucfirst($action) : "";
+
+    if($hasbinder && class_exists($binderClass))
         echo $cc->$action($parameters,new $binderClass($parameters));
     else
         echo $cc->$action($parameters);
